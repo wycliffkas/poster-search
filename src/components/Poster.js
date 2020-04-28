@@ -1,8 +1,8 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
 import { truncate } from "../utils/common";
+import { NavLink } from "react-router-dom";
 
-const Poster = ({ thumbnail, id, title }) => (
+const Poster = ({ thumbnail, id, title, onFetchSinglePoster }) => (
   <div className="col s4" style={{ margin: "20px 0" }}>
     <div className="card" style={{ width: "18rem", textAlign: "center" }}>
       <div style={{ margin: "auto" }}>
@@ -17,7 +17,11 @@ const Poster = ({ thumbnail, id, title }) => (
         <li className="list-group-item">{truncate(title, 25)}</li>
       </ul>
       <div className="card-body">
-        <NavLink to={`/posterDetails/${id}`} className="card-link">
+        <NavLink
+          className="card-link"
+          to="/"
+          onClick={() => onFetchSinglePoster(id)}
+        >
           More Details
         </NavLink>
       </div>

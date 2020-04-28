@@ -1,5 +1,5 @@
 import React from "react";
-import Loader from "../loader.gif";
+import Loader from "../assets/images/loader.gif";
 
 const Search = ({ loading, message, query, onChangeHandler }) => {
   return (

@@ -1,18 +1,25 @@
 import React, { Component } from "react";
 import axios from "axios";
-import Navigation from "./Navigation";
-import Poster from "./Poster";
-import Search from "./Search";
+import Navigation from "../components/Navigation";
+import Poster from "../components/Poster";
+import Search from "../components/Search";
+import PosterDetails from "../components/PosterDetails";
 import { getPageCount } from "../utils/common";
 
 class Home extends Component {
   componentDidMount() {
+    if (localStorage.getItem("searchQuery")) {
+      const query = localStorage.getItem("searchQuery");
+      this.fetchSearchResults(query);
+    }
     this.cancel = "";
   }
 
   state = {
     query: "",
     results: [],
+    singlePosterDetails: [],
+    selectedPosterId: "",
     loading: false,
     message: "",
     totalResults: 0,
@@ -26,14 +33,15 @@ class Home extends Component {
     if (!query) {
       this.setState({
         query,
-        results: {},
+        results: [],
+        singlePosterDetails: [],
         message: "",
         totalResults: 0,
         totalPages: 0,
       });
     } else {
       this.setState({ query: query, loading: true, message: "" }, () => {
-        this.fetchSearchResults(query, 1);
+        this.fetchSearchResults(query);
       });
     }
   };
@@ -71,6 +79,8 @@ class Home extends Component {
           currentPageNo: setPageNumber,
           loading: false,
         });
+
+        localStorage.setItem("searchQuery", query);
       })
       .catch((error) => {
         if (axios.isCancel(error) || error) {
@@ -82,8 +92,33 @@ class Home extends Component {
       });
   };
 
+  fetchSinglePoster = (id) => {
+    console.log("fetching single poster......");
+    axios
+      .get(`https://staging-ng.morressier.com/events_manager/v2/posters/${id}`)
+      .then((response) => {
+        this.setState({
+          results: [],
+          message: "",
+          totalResults: 0,
+          totalPages: 0,
+          currentPageNo: 0,
+        });
+        console.log("response", response.data.poster);
+        const results = [];
+        results.push(response.data.poster);
+        console.log("results", results);
+        this.setState({
+          singlePosterDetails: results,
+        });
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  };
+
   renderSearchResults = () => {
-    const { results } = this.state;
+    const { results, singlePosterDetails } = this.state;
 
     if (Object.keys(results).length && results.length) {
       return (
@@ -94,10 +129,29 @@ class Home extends Component {
               thumbnail={result.thumb_url}
               id={result.id}
               key={result.id}
+              onFetchSinglePoster={this.fetchSinglePoster}
             />
           ))}
         </div>
       );
+    } else if (singlePosterDetails && singlePosterDetails.length) {
+      return (
+        <div className="row no-gutters justify-content-center">
+          {singlePosterDetails.map((detail) => (
+            <PosterDetails
+              title={detail.title}
+              thumbnail={detail.thumb_url}
+              authors={detail._co_authors.join()}
+              keywords={detail.keywords.join()}
+              upload={detail.submitted_at}
+              abstract={detail.paper_abstract}
+              key={detail.id}
+            />
+          ))}
+        </div>
+      );
+    } else {
+      return <div>Enter Search Query</div>;
     }
   };
 
