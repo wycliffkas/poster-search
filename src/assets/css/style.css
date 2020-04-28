@@ -50,25 +50,6 @@
   box-shadow: 2px 2px 2px #898989;
 }
 
-.image-username {
-  color: #ff7f50;
-  font-size: 18px;
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  margin: 0;
-  background-color: rgba(0, 0, 0, 0.8);
-  padding: 5px 10px;
-}
-
-.image-wrapper {
-  display: flex;
-  justify-content: center;
-  align-self: center;
-  box-sizing: border-box;
-  height: 100%;
-}
-
 .card-img,
 .card-img-top {
   height: 300px;
@@ -120,3 +101,12 @@
 .list-group-flush .list-group-item:first-child {
   border-top-width: 1px;
 }
+
+.medium_poster {
+  width: 100%;
+}
+
+.p-details {
+  margin-top: 40px;
+}
+

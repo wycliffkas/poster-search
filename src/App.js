@@ -1,6 +1,6 @@
 import React from "react";
-import Home from "./components/Home";
-import "./assets/style.css";
+import Home from "./containers/Home";
+import "./assets/css/style.css";
 import { BrowserRouter } from "react-router-dom";
 
 const App = () => {
